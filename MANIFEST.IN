@@ -1,0 +1,3 @@
+graft random_list/templates
+graft randon_list/static
+include random_list/schema.sql
