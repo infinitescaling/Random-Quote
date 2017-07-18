@@ -1,0 +1,25 @@
+<!doctype html>
+<title>Quotes</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<div class=page>
+    {% if anime %}
+    <h1>Anime</h1>
+    {% endif %}
+    {% if chars %}
+    <h1>Characters</h1>
+    {% endif %}
+        <div class=metanav>
+        </div>
+        {% if anime %}
+            {% for titles in anime %}
+            <div class=flash onclick="location.href=/{{ titles[0] }});">{{ titles[0] }}</div>
+            {% endfor %}
+        {% endif %}
+        {% if chars %}
+            {% for characters in char %}
+            <div class=flash onclick="location.href=/{{ characters[0] }});">{{ char[0] }}</div>
+            {% endfor %}
+        {% endif %}
+        {% block body %}{% endblock %}
+
+    </div>
