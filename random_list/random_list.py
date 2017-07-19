@@ -6,7 +6,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 
 
 app = Flask(__name__) # create the application instance :)
-app.config.from_object(__name__) # load config from this file , flaskr.py
+app.config.from_object(__name__) # load config from this file
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
@@ -51,38 +51,49 @@ def close_db(error):
         if hasattr(g, 'sqlite_db'):
                     g.sqlite_db.close()
 
+
 @app.route('/')
-def get_quote(girl):
-    if girl is not None:
-        print('Character retrieved is ' + girl)
-        girl = r"'" + girl + r"'"
-        print('String created is ' + girl)
+def get_anime():
+    db = get_db()
+    cur = db.execute('select distinct searchable_anime, anime from chars')
+    entries = cur.fetchall()
+    print(entries)
+    cur.close()
+    return render_template('show_entries.html', anime=entries)
+
+
+@app.route('/<anime>/',methods=['GET'])
+def get_char(anime):
+    anime = anime.lower()
+    anime= r"'" + anime + "'"
+    db = get_db()
+    cur = db.execute('select distinct name, anime from chars where searchable_anime is ' + anime)
+    entries = cur.fetchall()
+    print(entries)
+    cur.close()
+    return render_template('show_entries.html', chars=entries)
+
+@app.route('/<anime>/<character>/',methods=['GET'])
+def get_quote(anime, character):
+    if character is not None:
+        character = character.lower()
+        character = r"'" + character + r"'"
+        print('Character retrieved is ' + character)
+        anime = anime.lower()
+        anime = r"'" + anime + "'"
+        print('Anime retrieved is ' + anime)
         db = get_db()
-        cur = db.execute('select quote from quotes where character IN (select ' + girl + ' from quotes ORDER by RANDOM() LIMIT 1)')
+        query = 'select quote, fullname from quotes where anime is ' + anime + ' and character IN (select ' + character + ' from quotes ORDER by RANDOM() LIMIT 1)'
+        print('Query is ' + query)
+        cur = db.execute(query)
         entries = cur.fetchall()
+        cur.close()
         print(entries)
-        return render_template('show_entries.html', entries=entries)
+        return render_template('show_entries.html', quote=entries)
     else:
         print('Failed')
         return
-"""
-@app.route('/test')
-def get_quotetest():
-    girl = 'Kanbaru Suruga'
-    if girl is not None:
-        print('Character retrieved is ' + girl)
-        girl = r"'" + girl + r"'"
-        print('String created is ' + girl)
-        db = get_db()
-        cur = db.execute('select quote from quotes where character IN (select ' + girl + ' from quotes ORDER by RANDOM() LIMIT 1)')
-        entries = cur.fetchall()
-        print(entries)
-        return
-        #return render_template('show_entries.html', entries=entries)
-    else:
-        print('Failed')
-        return
-"""
+
 def print_phrase(list):
     if not list:
         print("No list")

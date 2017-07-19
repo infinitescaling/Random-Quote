@@ -4,21 +4,33 @@
 <div class=page>
     {% if anime %}
     <h1>Anime</h1>
-    {% endif %}
-    {% if chars %}
+    {% elif chars %}
     <h1>Characters</h1>
+    {% elif quote %}
+        {% for entries in quote %}
+        <h1>{{ entries[1] }}</h1>
+        {% endfor %}
+    {% else %}
+    <h1>Error</h1>
     {% endif %}
         <div class=metanav>
         </div>
         {% if anime %}
-            {% for titles in anime %}
-            <div class=flash onclick="location.href=/{{ titles[0] }});">{{ titles[0] }}</div>
+        {% for titles in anime %}
+        <a href="/{{ titles[0] }}/">
+            <div class=flash>{{ titles[1] }}</div>
+        </a>    
             {% endfor %}
-        {% endif %}
-        {% if chars %}
-            {% for characters in char %}
-            <div class=flash onclick="location.href=/{{ characters[0] }});">{{ char[0] }}</div>
-            {% endfor %}
+        {% elif chars %}
+            {% for characters in chars %}
+            <a href="/{{ characters[1].title() }}/{{characters[0]}}/">
+                <div class=flash>{{ characters[0] }}</div>
+            </a>
+                {% endfor %}
+        {% elif quote %}
+            {% for entry in quote %}
+            <div class=flash >{{ entry[0] }}</div>
+            {% endfor %}    
         {% endif %}
         {% block body %}{% endblock %}
 
