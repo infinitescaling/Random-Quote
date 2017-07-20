@@ -65,9 +65,9 @@ def get_anime():
 @app.route('/<anime>/',methods=['GET'])
 def get_char(anime):
     anime = anime.lower()
-    anime= r"'" + anime + "'"
+    #anime= r"'" + anime + "'"
     db = get_db()
-    cur = db.execute('select distinct name, anime from chars where searchable_anime is ' + anime)
+    cur = db.execute("select distinct name, anime from chars where searchable_anime is '%s';"  % anime )
     entries = cur.fetchall()
     print(entries)
     cur.close()
@@ -77,13 +77,13 @@ def get_char(anime):
 def get_quote(anime, character):
     if character is not None:
         character = character.lower()
-        character = r"'" + character + r"'"
+        #character = r"'" + character + r"'"
         print('Character retrieved is ' + character)
         anime = anime.lower()
-        anime = r"'" + anime + "'"
+        #anime = r"'" + anime + "'"
         print('Anime retrieved is ' + anime)
         db = get_db()
-        query = 'select quote, fullname from quotes where anime is ' + anime + ' and character IN (select ' + character + ' from quotes ORDER by RANDOM() LIMIT 1)'
+        query = "select quote, fullname, character, image from quotes where anime is '%s' and character IN (select '%s' from quotes ORDER by RANDOM() LIMIT 1)" % (anime, character)
         print('Query is ' + query)
         cur = db.execute(query)
         entries = cur.fetchall()
@@ -94,25 +94,7 @@ def get_quote(anime, character):
         print('Failed')
         return
 
-def print_phrase(list):
-    if not list:
-        print("No list")
-    else:
-        secure_random = random.SystemRandom
-        line_array = random.choice(list)
-        line = line_array.split(', ')
-        print(line[1])
 
-
-def main():
-    girl = 'Kanbaru Suruga'
-    get_quote(girl)   
-    #lines = []
-    #with open('list.txt') as f:
-    #    lines = f.read().splitlines() 
-
-  
-    #printstuff(lines)
 
 
 if __name__ == '__main__':
