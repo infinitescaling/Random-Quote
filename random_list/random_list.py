@@ -83,7 +83,7 @@ def get_quote(anime, character):
         #anime = r"'" + anime + "'"
         print('Anime retrieved is ' + anime)
         db = get_db()
-        query = "select quote, fullname, character, image from quotes where anime is '%s' and character IN (select '%s' from quotes ORDER by RANDOM() LIMIT 1)" % (anime, character)
+        query = "select quote, fullname, character, image from quotes where anime is '%s' and character is '%s' ORDER by RANDOM() LIMIT 1" % (anime, character)
         print('Query is ' + query)
         cur = db.execute(query)
         entries = cur.fetchall()
