@@ -8,12 +8,17 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 app = Flask(__name__) # create the application instance :)
 app.config.from_object(__name__) # load config from this file
 
-# Load default config and override config from an environment variable
+SECRET_KEY = 'new development key'
+USERNAME = 'the most super user'
+PASSWORD = 'anewpasswordishere'
+
+
+#Load default config and override config from an environment variable
 app.config.update(dict(
         DATABASE=os.path.join(app.root_path, 'random_list.db'),
-            SECRET_KEY='development key',
-                USERNAME='admin',
-                    PASSWORD='default'
+            SECRET_KEY=SECRET_KEY,
+                USERNAME=USERNAME,
+                    PASSWORD=PASSWORD
                     ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
