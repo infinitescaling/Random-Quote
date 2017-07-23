@@ -8,9 +8,6 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 app = Flask(__name__) # create the application instance :)
 app.config.from_object(__name__) # load config from this file
 
-SECRET_KEY = 'new development key'
-USERNAME = 'the most super user'
-PASSWORD = 'anewpasswordishere'
 
 
 #Load default config and override config from an environment variable
@@ -98,10 +95,4 @@ def get_quote(anime, character):
     else:
         print('Failed')
         return
-
-
-
-
-if __name__ == '__main__':
-    main()
 
